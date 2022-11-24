@@ -1,0 +1,32 @@
+﻿<Window x:Class="LoadingAnimation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LoadingAnimation"
+        mc:Ignorable="d" 
+        xmlns:viewModels="clr-namespace:LoadingAnimation.ViewModels"
+        xmlns:conv="clr-namespace:LoadingAnimation.Converters"
+        xmlns:controls="clr-namespace:LoadingAnimation.Controls"
+        d:DataContext="{d:DesignInstance Type=viewModels:ShimmerViewModel}"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel>
+    <DockPanel.Resources>
+      <ResourceDictionary>
+        <DataTemplate DataType="{x:Type viewModels:SharedShimmerOptionViewModel}">
+          <controls:ShimmerShared  Background="Green"/>
+        </DataTemplate>
+      </ResourceDictionary>
+    </DockPanel.Resources>
+
+      <DockPanel DockPanel.Dock="Bottom">
+        <Button Command="{Binding NextOptionCommand}" Content="Next" MinWidth="120"/>
+        <Button CommandParameter="{Binding Value, ElementName=slider, Converter={conv:ToIntConverter}}" 
+                Command="{Binding SetItemsCommand}" Content="Set" MinWidth="120"/>
+      <TextBlock Text="{Binding Value, ElementName=slider}" Margin="2" MinWidth="80" />
+      <Slider x:Name="slider" Minimum="0" Maximum="1000" SmallChange="1" TickFrequency="1" IsSnapToTickEnabled="True"/>
+      </DockPanel>
+
+    <ContentPresenter DockPanel.Dock="Top" Content="{Binding Option}" />
+  </DockPanel>
+</Window>
