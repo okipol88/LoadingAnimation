@@ -28,9 +28,15 @@ namespace LoadingAnimation.ViewModels
     }
   }
 
-  public class NoOption : ShimmerOptiomViewModel
+  public class NoOptionViewModel : ShimmerOptiomViewModel
   {
-    public NoOption(ObservableCollection<object> items) : base(items)
+    public NoOptionViewModel(ObservableCollection<object> items) : base(items)
+    {
+    }
+  }
+  public class ShimmerByInstanceViewModel : ShimmerOptiomViewModel
+  {
+    public ShimmerByInstanceViewModel(ObservableCollection<object> items) : base(items)
     {
     }
   }
@@ -48,8 +54,9 @@ namespace LoadingAnimation.ViewModels
 
       _shimmerOptionsMap = new Dictionary<Type, Func<ShimmerOptiomViewModel>>
       {
-        {typeof(SharedShimmerOptionViewModel), () => new NoOption(Items) },
-        {typeof(NoOption), () => new SharedShimmerOptionViewModel(Items) },
+        {typeof(SharedShimmerOptionViewModel), () => new ShimmerByInstanceViewModel(Items) },
+        {typeof(ShimmerByInstanceViewModel), () => new NoOptionViewModel(Items) },
+        {typeof(NoOptionViewModel), () => new SharedShimmerOptionViewModel(Items) },
       };
     }
 

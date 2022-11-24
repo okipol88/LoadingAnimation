@@ -16,6 +16,9 @@
         <DataTemplate DataType="{x:Type viewModels:SharedShimmerOptionViewModel}">
           <controls:ShimmerShared  Background="Green"/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ShimmerByInstanceViewModel}">
+          <controls:ShimmerShared  Background="Blue"/>
+        </DataTemplate>
       </ResourceDictionary>
     </DockPanel.Resources>
 
@@ -24,7 +27,7 @@
         <Button CommandParameter="{Binding Value, ElementName=slider, Converter={conv:ToIntConverter}}" 
                 Command="{Binding SetItemsCommand}" Content="Set" MinWidth="120"/>
       <TextBlock Text="{Binding Value, ElementName=slider}" Margin="2" MinWidth="80" />
-      <Slider x:Name="slider" Minimum="0" Maximum="1000" SmallChange="1" TickFrequency="1" IsSnapToTickEnabled="True"/>
+      <Slider x:Name="slider" Minimum="0" Maximum="10000" SmallChange="1" TickFrequency="1" IsSnapToTickEnabled="True"/>
       </DockPanel>
 
     <ContentPresenter DockPanel.Dock="Top" Content="{Binding Option}" />
