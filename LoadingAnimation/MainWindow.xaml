@@ -30,6 +30,10 @@
       <Slider x:Name="slider" Minimum="0" Maximum="10000" SmallChange="1" TickFrequency="1" IsSnapToTickEnabled="True"/>
       </DockPanel>
 
-    <ContentPresenter DockPanel.Dock="Top" Content="{Binding Option}" />
+    <Grid DockPanel.Dock="Top" >
+
+      <ContentPresenter Content="{Binding Option}" />
+      <TextBlock VerticalAlignment="Top" Text="{Binding Option}" />
+    </Grid>
   </DockPanel>
 </Window>
