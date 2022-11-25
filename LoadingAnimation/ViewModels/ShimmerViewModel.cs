@@ -3,10 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace LoadingAnimation.ViewModels
 {
@@ -34,19 +30,20 @@ namespace LoadingAnimation.ViewModels
     {
     }
   }
+
   public class ShimmerByInstanceViewModel : ShimmerOptiomViewModel
   {
     public ShimmerByInstanceViewModel(ObservableCollection<object> items) : base(items)
     {
     }
   }
+
   public class ShimmerAsCoverViewModel : ShimmerOptiomViewModel
   {
     public ShimmerAsCoverViewModel(ObservableCollection<object> items) : base(items)
     {
     }
   }
-
 
   public partial class ShimmerViewModel : ObservableObject
   {
@@ -57,7 +54,7 @@ namespace LoadingAnimation.ViewModels
 
     public ShimmerViewModel()
     {
-      _option = new SharedShimmerOptionViewModel(Items);
+      _option = new ShimmerAsCoverViewModel(Items);
 
       _shimmerOptionsMap = new Dictionary<Type, Func<ShimmerOptiomViewModel>>
       {

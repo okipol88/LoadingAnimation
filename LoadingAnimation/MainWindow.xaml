@@ -20,7 +20,7 @@
           <controls:ShimmerShared  Background="Blue"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:ShimmerAsCoverViewModel}">
-          <controls:ShimmerAsCoverUserControl  Background="red"/>
+          <controls:ShimmerAsCoverUserControl Background="Black"/>
         </DataTemplate>
       </ResourceDictionary>
     </DockPanel.Resources>

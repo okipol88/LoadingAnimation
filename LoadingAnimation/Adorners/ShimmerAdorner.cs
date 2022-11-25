@@ -65,6 +65,7 @@ namespace LoadingAnimation.Adorners
       Brush = MakeBrush();
 
       Brush.RelativeTransform = AnimationTransform;
+
     }
 
     private TranslateTransform MakeTransform()
@@ -74,7 +75,7 @@ namespace LoadingAnimation.Adorners
                      new DoubleAnimation(
                          -1, // "From" value
                          1, // "To" value
-                         new Duration(TimeSpan.FromSeconds(0.5))
+                         new Duration(TimeSpan.FromSeconds(2))
                      );
       myAnimation.RepeatBehavior = RepeatBehavior.Forever;
       // Create a clock the for the animation.
@@ -90,16 +91,13 @@ namespace LoadingAnimation.Adorners
     {
       LinearGradientBrush myLinearGradientBrush =
           new LinearGradientBrush();
-      myLinearGradientBrush.StartPoint = new Point(0, 0);
-      myLinearGradientBrush.EndPoint = new Point(1, 1);
+      myLinearGradientBrush.StartPoint = new Point(0, 0.5);
+      myLinearGradientBrush.EndPoint = new Point(1, 0.5);
       myLinearGradientBrush.GradientStops.Add(
-          new GradientStop(Colors.Yellow, 0.0));
+          new GradientStop(Colors.Red, 0.0));
       myLinearGradientBrush.GradientStops.Add(
-          new GradientStop(Colors.Red, 0.25));
-      myLinearGradientBrush.GradientStops.Add(
-          new GradientStop(Colors.Blue, 0.75));
-      myLinearGradientBrush.GradientStops.Add(
-          new GradientStop(Colors.LimeGreen, 1.0));
+          new GradientStop(Colors.Blue, 1));
+
       return myLinearGradientBrush;
     }
 
@@ -108,21 +106,37 @@ namespace LoadingAnimation.Adorners
 
     protected override void OnRender(DrawingContext drawingContext)
     {
+      var brush = Brush;
+      brush.MappingMode = BrushMappingMode.RelativeToBoundingBox;
+      //brush = MakeBrush();
+
       Rect adornedElementRect = new Rect(this.AdornedElement.RenderSize);
+      var group = new GeometryGroup();
+      group.Children.Add(new RectangleGeometry(new Rect(0, 0, 100, adornedElementRect.Height)));
+      group.Children.Add(new RectangleGeometry(new Rect(200, 0, 100, adornedElementRect.Height)));
+      group.Children.Add(new RectangleGeometry(new Rect(400, 0, 100, adornedElementRect.Height)));
+      group.Children.Add(new RectangleGeometry(new Rect(600, 0, 100, adornedElementRect.Height)));
+      group.Children.Add(new RectangleGeometry(new Rect(800, 0, 100, adornedElementRect.Height)));
 
-      // Some arbitrary drawing implements.
-      Pen renderPen = new Pen(new SolidColorBrush(Colors.Navy), 1.5);
-      double renderRadius = 5.0;
+      drawingContext.PushClip(group);
+      drawingContext.DrawRectangle(brush, new Pen(Brushes.Green, 12), adornedElementRect);
+      //adornedElementRect = adornedElementRect with { Height = adornedElementRect.Height / 2};
 
-      drawingContext.DrawRectangle(Brush, null, adornedElementRect);
+      //var pen = new Pen(Brushes.Green, 1);
+
+      //var oneFourth = adornedElementRect.Width / 4;
+      //var smallerRect = Rect.Offset(adornedElementRect, -oneFourth*3, 0);
+
+      //drawingContext.DrawRectangle(brush, pen, smallerRect);
+
+      //var margin = 10;
+
+      //drawingContext.DrawRectangle(brush, pen,
+      //  new Rect(adornedElementRect.X + adornedElementRect.Width / 4 + margin,
+      //  0, adornedElementRect.Width / 4 - margin * 2, adornedElementRect.Height));
 
 
-
-      // Draw a circle at each corner.
-      //drawingContext.DrawEllipse(renderBrush, renderPen, adornedElementRect.TopLeft, renderRadius, renderRadius);
-      //drawingContext.DrawEllipse(renderBrush, renderPen, adornedElementRect.TopRight, renderRadius, renderRadius);
-      //drawingContext.DrawEllipse(renderBrush, renderPen, adornedElementRect.BottomLeft, renderRadius, renderRadius);
-      //drawingContext.DrawEllipse(renderBrush, renderPen, adornedElementRect.BottomRight, renderRadius, renderRadius);
+      //drawingContext.DrawRectangle(brush, pen, Rect.Offset(adornedElementRect, oneFourth * 3, 0));
     }
   }
 }
