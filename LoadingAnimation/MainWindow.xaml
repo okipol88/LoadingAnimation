@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type viewModels:ShimmerByInstanceViewModel}">
           <controls:ShimmerShared  Background="Blue"/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ShimmerAsCoverViewModel}">
+          <controls:ShimmerAsCoverUserControl  Background="red"/>
+        </DataTemplate>
       </ResourceDictionary>
     </DockPanel.Resources>
 

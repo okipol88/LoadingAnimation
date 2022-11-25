@@ -16,15 +16,13 @@ using System.Windows.Shapes;
 namespace LoadingAnimation.Controls
 {
   /// <summary>
-  /// Interaction logic for ShimmerByInstance.xaml
+  /// Interaction logic for ShimmerAsCoverUserControl.xaml
   /// </summary>
-  public partial class ShimmerByInstance : UserControl
+  public partial class ShimmerAsCoverUserControl : UserControl
   {
-    public ShimmerByInstance()
+    public ShimmerAsCoverUserControl()
     {
       InitializeComponent();
-
-      var visual = new DrawingVisual();
     }
   }
 }

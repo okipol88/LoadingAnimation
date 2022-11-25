@@ -40,6 +40,13 @@ namespace LoadingAnimation.ViewModels
     {
     }
   }
+  public class ShimmerAsCoverViewModel : ShimmerOptiomViewModel
+  {
+    public ShimmerAsCoverViewModel(ObservableCollection<object> items) : base(items)
+    {
+    }
+  }
+
 
   public partial class ShimmerViewModel : ObservableObject
   {
@@ -55,7 +62,8 @@ namespace LoadingAnimation.ViewModels
       _shimmerOptionsMap = new Dictionary<Type, Func<ShimmerOptiomViewModel>>
       {
         {typeof(SharedShimmerOptionViewModel), () => new ShimmerByInstanceViewModel(Items) },
-        {typeof(ShimmerByInstanceViewModel), () => new NoOptionViewModel(Items) },
+        {typeof(ShimmerByInstanceViewModel), () => new ShimmerAsCoverViewModel(Items) },
+        {typeof(ShimmerAsCoverViewModel), () => new NoOptionViewModel(Items) },
         {typeof(NoOptionViewModel), () => new SharedShimmerOptionViewModel(Items) },
       };
     }
