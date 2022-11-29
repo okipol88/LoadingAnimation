@@ -6,6 +6,19 @@ using System.Collections.ObjectModel;
 
 namespace LoadingAnimation.ViewModels
 {
+  public partial class LoadableItem : ObservableObject
+  {
+    [ObservableProperty]
+    private bool _isLoading;
+
+
+    [RelayCommand]
+    private void ToggleIsLoading()
+    {
+      IsLoading = !IsLoading;
+    }
+  }
+
   public abstract class ShimmerOptiomViewModel
   {
     public ShimmerOptiomViewModel(ObservableCollection<object> items)
@@ -47,6 +60,7 @@ namespace LoadingAnimation.ViewModels
 
   public partial class ShimmerViewModel : ObservableObject
   {
+    private static Random _rnd = new Random();
     private Dictionary<Type, Func<ShimmerOptiomViewModel>> _shimmerOptionsMap;
 
     [ObservableProperty]
@@ -79,7 +93,7 @@ namespace LoadingAnimation.ViewModels
       {
         for (int i = 0; i < diff; i++)
         {
-          Items.Add(new object());
+          Items.Add(new LoadableItem { IsLoading = _rnd.Next(0, 10) > 4 });
         }
       } 
       else

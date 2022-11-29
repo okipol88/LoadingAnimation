@@ -5,30 +5,49 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LoadingAnimation.Controls"
              mc:Ignorable="d" 
+             xmlns:converters="clr-namespace:LoadingAnimation.Converters"
              xmlns:adorner="clr-namespace:LoadingAnimation.Adorners"
              d:DesignHeight="450" d:DesignWidth="800">
   <AdornerDecorator>
     <Grid adorner:ShimmerAdorner.Attach="True" >
-      <!--<Rectangle Width="200" Height="100">
-        <Rectangle.Fill>
-          <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-            <GradientStop Color="blue" Offset="0.0" />
-            <GradientStop Color="Red" Offset="1.0" />
-          </LinearGradientBrush>
-        </Rectangle.Fill>
-      </Rectangle>-->
-      <!--<Grid.Clip>
-        <GeometryGroup>
-          <EllipseGeometry
-      RadiusX="100"
-      RadiusY="75"
-      Center="100,75"/>
-          <EllipseGeometry
-      RadiusX="100"
-      RadiusY="75"
-      Center="400,75"/>
-        </GeometryGroup>
-      </Grid.Clip>-->
+
+      <ItemsControl ItemsSource="{Binding Items}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <DataTemplate.Resources>
+            </DataTemplate.Resources>
+            <Button  Margin="4" adorner:ShimmerAdorner.IsLoading="{Binding IsLoading}"
+                     Command="{Binding ToggleIsLoadingCommand}"
+                   Background="PaleGreen" Opacity="0.4" >
+              <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                  <Grid  Background="{TemplateBinding Background}">
+                    
+                  </Grid>
+                </ControlTemplate>
+              </Button.Template>
+              <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                  <Setter Property="adorner:ShimmerAdorner.IsLoading" Value="{Binding IsLoading}" />
+                  <Style.Triggers>
+                    <!--<Trigger Property="DataContext" Value="{}">
+                      <Setter Property="adorner:ShimmerAdorner.IsLoading" Value="False" />
+                    </Trigger>-->
+                    <Trigger Property="DataContext" Value="{x:Null}">
+                      <Setter Property="adorner:ShimmerAdorner.IsLoading" Value="False" />
+                    </Trigger>
+                  </Style.Triggers>
+                </Style>
+              </Button.Style>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <UniformGrid />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
     </Grid>
   </AdornerDecorator>
 </UserControl>

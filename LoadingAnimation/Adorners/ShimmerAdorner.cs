@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,41 @@ using System.Windows.Media.Animation;
 
 namespace LoadingAnimation.Adorners
 {
+  public class LoadingInfoMessage
+  {
+    public UIElement Element { get; set; }
+
+    public bool IsLoading { get; set; }
+  }
+
   public class ShimmerAdorner : Adorner
   {
 
+
+
+    public static bool GetIsLoading(DependencyObject obj)
+    {
+      return (bool)obj.GetValue(IsLoadingProperty);
+    }
+
+    public static void SetIsLoading(DependencyObject obj, bool value)
+    {
+      obj.SetValue(IsLoadingProperty, value);
+    }
+
+    // Using a DependencyProperty as the backing store for IsLoading.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IsLoadingProperty =
+        DependencyProperty.RegisterAttached("IsLoading", typeof(bool), typeof(ShimmerAdorner), new PropertyMetadata(false, OnIsLoadingChanged));
+
+    private static void OnIsLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+      if (d is not UIElement element)
+      {
+        throw new NotSupportedException();
+      }
+
+      WeakReferenceMessenger.Default.Send<LoadingInfoMessage>(new LoadingInfoMessage { Element = element, IsLoading = (bool)e.NewValue });
+    }
 
     public static bool GetAttach(DependencyObject obj)
     {
@@ -56,8 +89,7 @@ namespace LoadingAnimation.Adorners
       }
     }
 
-    
-
+    private readonly List<UIElement> _ongoingLoadings = new List<UIElement>();
 
     public ShimmerAdorner(UIElement adornedElement) : base(adornedElement)
     {
@@ -66,6 +98,23 @@ namespace LoadingAnimation.Adorners
 
       Brush.RelativeTransform = AnimationTransform;
 
+      WeakReferenceMessenger.Default.Register<LoadingInfoMessage>(this, HandleLoadingMessage);
+
+      IsHitTestVisible = false;
+    }
+
+    private void HandleLoadingMessage(object recipient, LoadingInfoMessage message)
+    {
+      if (message.IsLoading)
+      {
+        _ongoingLoadings.Add(message.Element);
+      } 
+      else
+      {
+        _ongoingLoadings.Remove(message.Element); 
+      }
+
+      this.InvalidateVisual();
     }
 
     private TranslateTransform MakeTransform()
@@ -112,13 +161,27 @@ namespace LoadingAnimation.Adorners
 
       Rect adornedElementRect = new Rect(this.AdornedElement.RenderSize);
       var group = new GeometryGroup();
-      group.Children.Add(new RectangleGeometry(new Rect(0, 0, 100, adornedElementRect.Height)));
-      group.Children.Add(new RectangleGeometry(new Rect(200, 0, 100, adornedElementRect.Height)));
-      group.Children.Add(new RectangleGeometry(new Rect(400, 0, 100, adornedElementRect.Height)));
-      group.Children.Add(new RectangleGeometry(new Rect(600, 0, 100, adornedElementRect.Height)));
-      group.Children.Add(new RectangleGeometry(new Rect(800, 0, 100, adornedElementRect.Height)));
+
+      var clipRects = _ongoingLoadings.Select(x =>
+      {
+        var transform = x.TransformToVisual(AdornedElement);
+        return new Rect(transform.Transform(new Point(0, 0)), x.RenderSize);
+      });
+
+      foreach (var item in clipRects)
+      {
+        group.Children.Add(new RectangleGeometry(item));
+      }
+
+      //group.Children.Add(new RectangleGeometry(new Rect(0, 0, 100, adornedElementRect.Height)));
+      //group.Children.Add(new RectangleGeometry(new Rect(200, 0, 100, adornedElementRect.Height)));
+      //group.Children.Add(new RectangleGeometry(new Rect(400, 0, 100, adornedElementRect.Height)));
+      //group.Children.Add(new RectangleGeometry(new Rect(600, 0, 100, adornedElementRect.Height)));
+      //group.Children.Add(new RectangleGeometry(new Rect(800, 0, 100, adornedElementRect.Height)));
 
       drawingContext.PushClip(group);
+
+
       drawingContext.DrawRectangle(brush, new Pen(Brushes.Green, 12), adornedElementRect);
       //adornedElementRect = adornedElementRect with { Height = adornedElementRect.Height / 2};
 
